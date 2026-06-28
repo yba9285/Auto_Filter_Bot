@@ -296,7 +296,7 @@ Nᴀᴍᴇ : {}
 
 Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
     
-    CAPTION = """<b><a href="https://t.me/mzbotz">{file_name}</a></b>\n\n<b>⚜️ Powered By : <a href="https://t.me/mzbotz">[ MZBOTZ ]</a></b>"""
+    CAPTION = """<b><a href="https://t.me/mzmoviiez">{file_name}</a></b>\n\n<b>⚜️ Powered By : <a href="https://t.me/mzbotz">[ MZBOTZ ]</a></b>"""
 
     
     MOVIE_UPDATE_NOTIFY_TXT = """
