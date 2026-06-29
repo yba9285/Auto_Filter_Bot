@@ -136,23 +136,24 @@ async def imdb_search(client, message):
     k = await message.reply_text('<b>Searching ImdB...</b>')
     
     try:
-        # Aapki Imdbposter file ke sahi function ko import aur call karna
         from plugins.Dreamxfutures.Imdbposter import get_movie_detailsx
         
         imdb = await get_movie_detailsx(title)
         
         if imdb:
+            # Safe URL fallback (agar link na mile toh direct google search par bhej dega taaki crash na ho)
+            imdb_url = imdb.get('url') or f"https://www.google.com/search?q={title}+imdb"
+            
             caption = f"""
 <b>🎬 Qᴜᴇʀʏ: {imdb.get('title')}</b>
 
-🏷️ <b>Tɪᴛʟᴇ:</b> <a href="{imdb.get('url')}">{imdb.get('title')}</a>
+🏷️ <b>Tɪᴛʟᴇ:</b> <a href="{imdb_url}">{imdb.get('title')}</a>
 🎭 <b>Gᴇɴʀᴇꜱ:</b> {imdb.get('genres', 'N/A')}
-📆 <b>Yᴇᴀʀ:</b> <a href="{imdb.get('url')}/releaseinfo">{imdb.get('year')}</a>
+📆 <b>Yᴇᴀʀ:</b> <a href="{imdb_url}/releaseinfo">{imdb.get('year', 'N/A')}</a>
 🌟 <b>Rᴀᴛɪɴɢ:</b> {imdb.get('rating', 'N/A')}/10
 """
-            btn = [[InlineKeyboardButton(text="🔗 View on IMDb", url=imdb.get('url'))]]
+            btn = [[InlineKeyboardButton(text="🔗 View Details", url=str(imdb_url))]]
             
-            # Direct text response bypass (Group restrictions se bachne ke liye sabse safe)
             await message.reply_text(
                 text=caption, 
                 reply_markup=InlineKeyboardMarkup(btn), 
@@ -164,7 +165,6 @@ async def imdb_search(client, message):
     except Exception as e:
         logger.exception(e)
     finally:
-        # Kisi bhi haal mein "Searching ImdB..." message ko delete karna
         try:
             await k.delete()
         except:
