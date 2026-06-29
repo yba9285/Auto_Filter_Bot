@@ -127,26 +127,70 @@ async def who_is(client, message):
         )
     await status_message.delete()
 
-@Client.on_message(filters.command(["imdb", 'search']))
+@Client.on_message(filters.command(["imdb", "search"]))
 async def imdb_search(client, message):
-    if ' ' in message.text:
-        k = await message.reply('Searching ImDB')
-        r, title = message.text.split(None, 1)
+    if ' ' not in message.text:
+        return await message.reply_text('<b>Give me a movie / series Name! Example: `/imdb Deva`</b>')
+    
+    # User ne jo movie name diya use nikalne ke liye
+    title = message.text.split(None, 1)[1]
+    k = await message.reply_text('<b>Searching ImdB...</b>')
+    
+    try:
+        # IMDb se detail fetch karna
         movies = await get_poster(title, bulk=True)
         if not movies:
-            return await message.reply("No results Found")
-        btn = [
-            [
-                InlineKeyboardButton(
-                    text=f"{movie.get('title')} - {movie.get('year')}",
-                    callback_data=f"imdb#{movie.movieID}",
+            return await k.edit("<b>No results Found on IMDb!</b>")
+        
+        # Sabse pehle (best match) movie ki details nikalna
+        movie = movies[0]
+        imdb = await get_poster(query=movie.movieID, id=True)
+        
+        if imdb:
+            caption = f"""
+<b>🎬 Qᴜᴇʀʏ: {imdb.get('title')}</b>
+
+🏷️ <b>Tɪᴛʟᴇ:</b> <a href="{imdb.get('url')}">{imdb.get('title')}</a>
+🎭 <b>Gᴇɴʀᴇꜱ:</b> {imdb.get('genres', 'N/A')}
+📆 <b>Yᴇᴀʀ:</b> <a href="{imdb.get('url')}/releaseinfo">{imdb.get('year')}</a>
+🌟 <b>Rᴀᴛɪɴɢ:</b> <a href="{imdb.get('url')}/ratings">{imdb.get('rating')}</a>/10
+"""
+            btn = [[InlineKeyboardButton(text="🔗 View on IMDb", url=imdb.get('url'))]]
+            
+            # Agar poster (photo) available hai toh photo ke sath bhejo
+            if imdb.get('poster'):
+                try:
+                    await message.reply_photo(
+                        photo=imdb['poster'], 
+                        caption=caption, 
+                        reply_markup=InlineKeyboardMarkup(btn)
+                    )
+                except Exception:
+                    # Agar group mein "Send Media" block hai, toh auto-fallback (sirf text bhejega taaki bot crash na ho)
+                    await message.reply_text(
+                        text=caption, 
+                        reply_markup=InlineKeyboardMarkup(btn), 
+                        disable_web_page_preview=False
+                    )
+            else:
+                # Agar poster nahi hai toh normal text bhejega
+                await message.reply_text(
+                    text=caption, 
+                    reply_markup=InlineKeyboardMarkup(btn), 
+                    disable_web_page_preview=False
                 )
-            ]
-            for movie in movies
-        ]
-        await k.edit('Here is what i found on IMDb', reply_markup=InlineKeyboardMarkup(btn))
-    else:
-        await message.reply('Give me a movie / series Name')
+        else:
+            await k.edit("<b>No results Found on IMDb!</b>")
+            
+    except Exception as e:
+        logger.exception(e)
+        await k.edit("<b>An error occurred while fetching IMDb details!</b>")
+    finally:
+        # "Searching ImdB..." waale temporary message ko delete karna
+        try:
+            await k.delete()
+        except:
+            pass
 
 @Client.on_callback_query(filters.regex('^imdb'))
 async def imdb_callback(bot: Client, quer_y: CallbackQuery):
