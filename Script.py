@@ -320,7 +320,7 @@ Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
 
 ʀᴀᴛɪɴɢ : <a href={url}/ratings>{rating}</a>
 ɢᴇɴʀᴇ : {genres}
-ᴀᴜᴅɪᴏ : {languages}
+ᴀᴜᴅɪᴏ : {languages}</b>"""
 
 
     LOGO = r"""
