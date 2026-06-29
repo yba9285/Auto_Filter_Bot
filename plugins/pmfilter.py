@@ -1930,6 +1930,7 @@ async def auto_filter(client, msg, spoll=False):
             )
             temp.IMDB_CAP[message.from_user.id] = cap
             if not settings.get('button'):
+                cap += "\n\n"  # 2 line ka space dene ke liye
                 for idx, file in enumerate(files, start=1):
                     cap += f"<b>\n{idx}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>[{get_size(file.file_size)}] {clean_filename(file.file_name)}\n</a></b>"
         else:
