@@ -132,19 +132,14 @@ async def imdb_search(client, message):
     if ' ' not in message.text:
         return await message.reply_text('<b>Give me a movie / series Name! Example: `/imdb Deva`</b>')
     
-    # User ne jo movie name diya use nikalne ke liye
     title = message.text.split(None, 1)[1]
     k = await message.reply_text('<b>Searching ImdB...</b>')
     
     try:
-        # IMDb se detail fetch karna
-        movies = await get_poster(title, bulk=True)
-        if not movies:
-            return await k.edit("<b>No results Found on IMDb!</b>")
+        # Aapki Imdbposter file ke sahi function ko import aur call karna
+        from plugins.Dreamxfutures.Imdbposter import get_movie_detailsx
         
-        # Sabse pehle (best match) movie ki details nikalna
-        movie = movies[0]
-        imdb = await get_poster(query=movie.movieID, id=True)
+        imdb = await get_movie_detailsx(title)
         
         if imdb:
             caption = f"""
@@ -153,40 +148,23 @@ async def imdb_search(client, message):
 🏷️ <b>Tɪᴛʟᴇ:</b> <a href="{imdb.get('url')}">{imdb.get('title')}</a>
 🎭 <b>Gᴇɴʀᴇꜱ:</b> {imdb.get('genres', 'N/A')}
 📆 <b>Yᴇᴀʀ:</b> <a href="{imdb.get('url')}/releaseinfo">{imdb.get('year')}</a>
-🌟 <b>Rᴀᴛɪɴɢ:</b> <a href="{imdb.get('url')}/ratings">{imdb.get('rating')}</a>/10
+🌟 <b>Rᴀᴛɪɴɢ:</b> {imdb.get('rating', 'N/A')}/10
 """
             btn = [[InlineKeyboardButton(text="🔗 View on IMDb", url=imdb.get('url'))]]
             
-            # Agar poster (photo) available hai toh photo ke sath bhejo
-            if imdb.get('poster'):
-                try:
-                    await message.reply_photo(
-                        photo=imdb['poster'], 
-                        caption=caption, 
-                        reply_markup=InlineKeyboardMarkup(btn)
-                    )
-                except Exception:
-                    # Agar group mein "Send Media" block hai, toh auto-fallback (sirf text bhejega taaki bot crash na ho)
-                    await message.reply_text(
-                        text=caption, 
-                        reply_markup=InlineKeyboardMarkup(btn), 
-                        disable_web_page_preview=False
-                    )
-            else:
-                # Agar poster nahi hai toh normal text bhejega
-                await message.reply_text(
-                    text=caption, 
-                    reply_markup=InlineKeyboardMarkup(btn), 
-                    disable_web_page_preview=False
-                )
+            # Direct text response bypass (Group restrictions se bachne ke liye sabse safe)
+            await message.reply_text(
+                text=caption, 
+                reply_markup=InlineKeyboardMarkup(btn), 
+                disable_web_page_preview=False
+            )
         else:
-            await k.edit("<b>No results Found on IMDb!</b>")
+            await message.reply_text("<b>No results Found on IMDb!</b>")
             
     except Exception as e:
         logger.exception(e)
-        await k.edit("<b>An error occurred while fetching IMDb details!</b>")
     finally:
-        # "Searching ImdB..." waale temporary message ko delete karna
+        # Kisi bhi haal mein "Searching ImdB..." message ko delete karna
         try:
             await k.delete()
         except:
