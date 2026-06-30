@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 post_sessions = {}
 
 USE_GETFILE_BUTTON_BY_DEFAULT = True
-DEFAULT_WATERMARK = "Join [MZBOTZ](https://t.me/mzbotz)"
+DEFAULT_WATERMARK = "Join [𝗠𝘇𝗕𝗼𝘁𝘇](https://t.me/mzbotz)"
 LANGUAGES_FORMAT = "➥ <b>Languages :</b> <code>{langs}</code>"
 RESOLUTIONS_FORMAT = "\n➥ <b>Qualities :</b> <code>{resolutions}</code>"
 OTT_FORMAT = "\n➥ <b>Available on :</b> <code>{otts}</code>"
@@ -206,6 +206,20 @@ async def _build_final_post_content(session: dict, session_id: int):
     if session.get("custom_otts"):
         final_caption += session["ott_format"].format(
             otts=', '.join(session['custom_otts']))
+
+    # --- AUTOMATIC HYPERLINK TEXT GENERATION CODE ---
+    title = movie_details.get("title", "movie")
+    year = movie_details.get("year", "")
+    movie_year = f"{title} {year}".strip()
+    movie_year = re.sub(r"[ *:\.]", "-", movie_year)
+    
+    # Ye bot ka auto start link banayega
+    bot_start_url = f"https://telegram.me/{temp.U_NAME}?start=getfile-{movie_year}"
+    
+    # Aap niche wale text ("Click Here To Get Files") ko apne hissab se change kar sakte hain
+    final_caption += f"\n\n🔗 <a href='{bot_start_url}'><b>Click Here To Get Files</b></a>"
+    # ------------------------------------------------
+
     if session.get("watermark"):
         final_caption += f"\n\n{session['watermark']}"
 
