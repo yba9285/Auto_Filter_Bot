@@ -259,7 +259,7 @@ async def update_post_preview(client: Client, session_id: int, chat_id: int, for
         if session["photo_mode"] and poster_to_use:
             if force_resend:
                 await client.delete_messages(chat_id, session["last_preview_message_id"])
-                sent_message = await client.send_photo(chat_id, photo=poster_to_use, caption=final_caption, reply_markup=keyboard, reply_to_message_id=session["original_message_id"])
+                sent_message = await client.send_photo(chat_id, photo=poster_to_use, caption=final_caption, reply_markup=keyboard, reply_to_message_id=session["original_message_id"], has_spoiler=True)
                 session["last_preview_message_id"] = sent_message.id
             else:
                 await client.edit_message_caption(chat_id, session["last_preview_message_id"], caption=final_caption, reply_markup=keyboard)
@@ -617,7 +617,8 @@ async def finalize_and_post(client: Client, query: CallbackQuery, session_id: in
         if mode == "Photo":
             await client.send_photo(
                 chat_id=MOVIE_UPDATE_CHANNEL, photo=poster_to_use,
-                caption=final_caption, reply_markup=final_keyboard
+                caption=final_caption, reply_markup=final_keyboard,
+                has_spoiler=True
             )
         else:
             text_content = f"<a href='{poster_to_use}'>&#8205;</a>{final_caption}" if poster_to_use else final_caption
