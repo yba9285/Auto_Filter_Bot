@@ -21,8 +21,8 @@ post_sessions = {}
 USE_GETFILE_BUTTON_BY_DEFAULT = True
 DEFAULT_WATERMARK = "🔥 <b>💪 Powered By »</b> <a href='https://t.me/mzbotz'><b>𝗠𝘇𝗕𝗼𝘁𝘇</b></a> 🔥"
 LANGUAGES_FORMAT = "\n\n🔊 <b>Languages :</b> <code>{langs}</code>"
-RESOLUTIONS_FORMAT = "\n➥ <b>Qualities :</b> <code>{resolutions}</code>"
-OTT_FORMAT = "\n➥ <b>Available on :</b> <code>{otts}</code>"
+RESOLUTIONS_FORMAT = "\n🎞️ <b>Qualities :</b> <code>{resolutions}</code>"
+OTT_FORMAT = "\n👀 <b>Available on :</b> <code>{otts}</code>"
 
 TEMPLATES = {
     "classic_emoji": """<b>{title} ({year})</b>
@@ -47,8 +47,8 @@ TEMPLATES = {
 {plot}""",
     "divider_list": """🎬 <b>{title} {year}</b>
 ━━━━━━━━━━━━━━━━━━
-➥ <b>Rating :</b> <code>★ {rating}/10</code>
-➥ <b>Genres :</b> <code>{genres}</code>
+⭐ <b>Rating :</b> <code>★ {rating}/10</code>
+🧩 <b>Genres :</b> <code>{genres}</code>
 """,
 
     "dashed_box": """- - - - - - - - - - - - - - - - - -
