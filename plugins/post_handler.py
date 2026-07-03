@@ -20,7 +20,7 @@ post_sessions = {}
 
 USE_GETFILE_BUTTON_BY_DEFAULT = True
 DEFAULT_WATERMARK = "🔥 <b>💪 Powered By »</b> <a href='https://t.me/mzbotz'><b>𝗠𝘇𝗕𝗼𝘁𝘇</b></a> 🔥"
-LANGUAGES_FORMAT = "\n➥ <b>Languages :</b> <code>{langs}</code>"
+LANGUAGES_FORMAT = "\n\n🔊 <b>Languages :</b> <code>{langs}</code>"
 RESOLUTIONS_FORMAT = "\n➥ <b>Qualities :</b> <code>{resolutions}</code>"
 OTT_FORMAT = "\n➥ <b>Available on :</b> <code>{otts}</code>"
 
