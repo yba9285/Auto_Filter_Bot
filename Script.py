@@ -296,7 +296,13 @@ Nᴀᴍᴇ : {}
 
 Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
     
-    CAPTION = """<b><a href="https://t.me/mzmoviiez">{file_name}</a></b>\n\n<b>⚜️ Powered By : <a href="https://t.me/mzbotz">[ MZBOTZ ]</a></b>"""
+    CAPTION = """<a href="https://t.me/mzmoviiezrequest">
+<b>{file_name}</b></a
+
+<b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href="https://t.me/mzmoviiez">
+𝐔𝐏𝐃𝐀𝐓𝐄 CHANNEL
+</a></blockquote></b><b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href="https://t.me/+Mpg7-erph8JkYmE1">
+MOVIEZ HUB</a></blockquote></b>"""
 
     
     MOVIE_UPDATE_NOTIFY_TXT = """
