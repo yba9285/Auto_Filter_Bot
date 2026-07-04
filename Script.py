@@ -301,8 +301,8 @@ Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
 
 <b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href="https://t.me/mzmoviiez">
 𝐔𝐏𝐃𝐀𝐓𝐄 CHANNEL
-</a></blockquote></b><b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href="https://t.me/+Mpg7-erph8JkYmE1">
-MOVIEZ HUB</a></blockquote></b>"""
+</a></blockquote></b><b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href="https://t.me/+D9KT3aahQOA5NjE1">
+MOVIEZ UPDATE</a></blockquote></b>"""
 
     
     MOVIE_UPDATE_NOTIFY_TXT = """
