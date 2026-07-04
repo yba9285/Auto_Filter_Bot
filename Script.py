@@ -296,12 +296,7 @@ Nᴀᴍᴇ : {}
 
 Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
     
-    CAPTION = """<a href="https://t.me/mzmoviiezrequest"><b>{file_name}</b></a>
-
-<blockquote><b>𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝙱𝚢 ➥ </b>
-• <a href="https://t.me/mzmoviiez">𝐔𝐏𝐃𝐀𝐓𝐄 CHANNEL</a>
-• <a href="https://t.me/+D9KT3aahQOA5NjE1">MOVIEZ UPDATE</a></blockquote>"""
-
+    CAPTION = """<a href="https://t.me/mzmoviiezrequest"><b>{file_name}</b></a>"""
 
  
     MOVIE_UPDATE_NOTIFY_TXT = """
