@@ -1,4 +1,4 @@
-import plugins.monkey_patch
+# import plugins.monkey_patch
 import sys
 from pyrogram import Client, idle, __version__
 from pyrogram.raw.all import layer
