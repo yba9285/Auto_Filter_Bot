@@ -354,7 +354,6 @@ async def start(client, message):
                     btn = await stream_buttons(message.from_user.id, file_id)
                     msg = await client.send_cached_media(
                         chat_id=message.from_user.id,
-                        cover=cover,
                         file_id=file_id,
                         caption=f_caption,
                         protect_content=settings.get('file_secure', PROTECT_CONTENT),
@@ -391,7 +390,6 @@ async def start(client, message):
                 btn = await stream_buttons(message.from_user.id, file_id)
                 msg = await client.send_cached_media(
                     chat_id=message.from_user.id,
-                    cover=cover,
                     file_id=file_id,
                     protect_content=settings.get('file_secure', PROTECT_CONTENT),
                     reply_markup=InlineKeyboardMarkup(btn))
@@ -445,7 +443,6 @@ async def start(client, message):
         msg = await client.send_cached_media(
             chat_id=message.from_user.id,
             file_id=file_id,
-            cover=cover,
             caption=f_caption,
             protect_content=settings.get('file_secure', PROTECT_CONTENT),
             reply_markup=InlineKeyboardMarkup(btn)
