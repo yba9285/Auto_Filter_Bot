@@ -108,7 +108,7 @@ TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/howtoopennlinks/21")   # Th
 
 # Verification (Must Fill All Veriables. Else You Got Error
 SHORTENER_API = environ.get("SHORTENER_API", "1aa2fcb77f78adfec5c65ab78678f4492ddc584d") # Shortener API key
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "vplinks.in") # Shortener website
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "vplink.in") # Shortener website
 
 SHORTENER_API2 = environ.get("SHORTENER_API2", "f565edfbea9e9a7e0ca7a758bbb580bf614d4487")  # Shortener API key for second website
 SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "arolinks.com") # Shortener website for second website
