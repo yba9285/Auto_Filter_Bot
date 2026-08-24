@@ -5,10 +5,12 @@ import logging
 import secrets
 import mimetypes
 from aiohttp.http_exceptions import BadStatusLine
-from dreamxbotz.Bot import multi_clients, work_loads
+from dreamxbotz.Bot import multi_clients, work_loads, temp
 from dreamxbotz.server.exceptions import FIleNotFound, InvalidHash
 from dreamxbotz.util.custom_dl import ByteStreamer
 from dreamxbotz.util.render_template import render_page
+from database.users_chats_db import db
+from utils import get_shortlink, get_settings
 from info import *
 
 
@@ -21,6 +23,99 @@ async def favicon_route_handler(request):
 @routes.get("/", allow_head=True)
 async def root_route_handler(request):
     return web.json_response("dreamxbotz")
+
+# ============================
+# 5-Second Verify Redirect Route
+# ============================
+@routes.get("/verify", allow_head=True)
+async def verify_redirect_handler(request: web.Request):
+    try:
+        type_ = request.query.get("type", "notcopy")
+        user_id = int(request.query.get("user_id"))
+        verify_id = request.query.get("verify_id")
+        file_id = request.query.get("file_id")
+        grp_id = int(request.query.get("grp_id", 0))
+
+        settings = await get_settings(grp_id)
+        is_second_shortener = await db.use_second_shortener(user_id, settings.get('verify_time', TWO_VERIFY_GAP))
+        is_third_shortener = await db.use_third_shortener(user_id, settings.get('third_verify_time', THREE_VERIFY_GAP))
+
+        bot_target_link = f"https://telegram.me/{temp.U_NAME}?start={type_}_{user_id}_{verify_id}_{file_id}"
+        short_url = await get_shortlink(bot_target_link, grp_id, is_second_shortener, is_third_shortener)
+
+        html = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="refresh" content="5;url={short_url}">
+            <title>Please Wait...</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    background-color: #0f172a;
+                    color: #ffffff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }}
+                .card {{
+                    background: #1e293b;
+                    padding: 30px;
+                    border-radius: 12px;
+                    text-align: center;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                    max-width: 90%;
+                    width: 380px;
+                }}
+                .timer {{
+                    font-size: 38px;
+                    font-weight: bold;
+                    color: #38bdf8;
+                    margin: 15px 0;
+                }}
+                .btn {{
+                    display: inline-block;
+                    background: #2563eb;
+                    color: white;
+                    padding: 10px 20px;
+                    text-decoration: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    margin-top: 10px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <h2>Verifying Link 🔐</h2>
+                <p>Redirecting to Shortener in</p>
+                <div class="timer" id="time">5</div>
+                <p style="font-size: 13px; color: #94a3b8;">Agar automatically redirect na ho toh:</p>
+                <a class="btn" href="{short_url}">Click Here to Proceed</a>
+            </div>
+            <script>
+                let sec = 5;
+                const timerElement = document.getElementById('time');
+                const interval = setInterval(() => {{
+                    sec--;
+                    timerElement.textContent = sec;
+                    if (sec <= 0) {{
+                        clearInterval(interval);
+                        window.location.href = "{short_url}";
+                    }}
+                }}, 1000);
+            </script>
+        </body>
+        </html>
+        """
+        return web.Response(text=html, content_type="text/html")
+    except Exception as e:
+        logging.error(f"Error in /verify route: {e}")
+        return web.Response(text=f"Verification Error: {str(e)}", status=500)
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def watch_handler(request: web.Request):
@@ -53,10 +148,8 @@ async def stream_handler(request: web.Request):
             secure_hash = match.group(1)
             id = int(match.group(2))
         else:
-            # Try to extract ID from path
             id_match = re.search(r"(\d+)(?:\/\S+)?", path)
             if not id_match:
-                # Path doesn't contain any numeric ID - return 404
                 raise web.HTTPNotFound(text="Not found")
             id = int(id_match.group(1))
             secure_hash = request.rel_url.query.get("hash")
@@ -67,7 +160,7 @@ async def stream_handler(request: web.Request):
     except FIleNotFound as e:
         raise web.HTTPNotFound(text=e.message)
     except web.HTTPNotFound:
-        raise  # Re-raise HTTPNotFound without logging
+        raise
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
@@ -152,9 +245,8 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
             "Content-Type": f"{mime_type}",
             "Content-Range": f"bytes {from_bytes}-{until_bytes}/{file_size}",
             "Content-Length": str(req_length),
-            "Content-Disposition": f'inline; filename="{file_name}"',  # inline for streaming
+            "Content-Disposition": f'inline; filename="{file_name}"',
             "Accept-Ranges": "bytes",
-            # CORS headers for JSMKV
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
             "Access-Control-Allow-Headers": "Range, Content-Type",
